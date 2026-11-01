@@ -728,17 +728,6 @@ button:active,
     font-size: 17px;
   }
 
-  .home-copy {
-    justify-content: flex-end;
-    width: 100%;
-    margin-left: 0;
-    padding: 58vh 22px 72px;
-  }
-
-  .home-copy h1 {
-    font-size: 36px;
-  }
-
   .title-row {
     flex-direction: column;
   }
@@ -957,6 +946,23 @@ button:active,
   letter-spacing: -0.03em;
   line-height: 1.12;
   white-space: pre-line;
+}
+
+@media (max-width: 720px) {
+  .home-copy {
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    justify-content: flex-end;
+    width: 100%;
+    min-height: 0;
+    padding: 0 22px 32px;
+  }
+
+  .home-copy h1 {
+    font-size: 36px;
+  }
 }
 
 .home-copy p {
