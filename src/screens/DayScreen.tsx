@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, type PointerEvent } from "react";
 import { entries, findEntry } from "../data.ts";
-import { formatStamp } from "../format.ts";
 import { CodeBlock } from "../components/CodeBlock.tsx";
 import { LanguageTag } from "../components/LanguageTag.tsx";
 import { RichText } from "../components/RichText.tsx";
@@ -97,7 +96,7 @@ export function DayScreen({ id, onOpen }: DayScreenProps) {
       onPointerCancel={onGestureUp}
     >
       <p className="meta">
-        <time dateTime={entry.stamp}>{formatStamp(entry.stamp)}</time>
+        <time dateTime={entry.stamp}>{entry.stamp}</time>
         <LanguageTag lang={entry.lang} />
       </p>
       <div className="title-row">
@@ -141,7 +140,7 @@ export function DayScreen({ id, onOpen }: DayScreenProps) {
               </span>
               <span className="side-title">{older.problem}</span>
             </span>
-            <span className="side-date">{formatStamp(older.stamp)}</span>
+            <span className="side-date">{older.stamp}</span>
           </button>
         ) : (
           <span />
@@ -154,7 +153,7 @@ export function DayScreen({ id, onOpen }: DayScreenProps) {
               </span>
               <span className="side-title">{newer.problem}</span>
             </span>
-            <span className="side-date">{formatStamp(newer.stamp)}</span>
+            <span className="side-date">{newer.stamp}</span>
           </button>
         ) : (
           <span />

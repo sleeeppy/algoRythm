@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { entries, excerpt, type Entry } from "../data.ts";
-import { formatStamp } from "../format.ts";
 import { LanguageTag } from "../components/LanguageTag.tsx";
 
 type LogScreenProps = {
@@ -36,7 +35,7 @@ function EntryRow({
 }) {
   return (
     <button type="button" className="row press" onClick={() => onOpen(entry.id)}>
-      <span className="row-date">{formatStamp(entry.stamp)}</span>
+      <span className="row-date">{entry.stamp}</span>
       <LanguageTag lang={entry.lang} />
       <span className="row-title">{entry.problem}</span>
       <span className="row-line">{excerpt(entry)}</span>
