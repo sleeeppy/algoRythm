@@ -235,9 +235,8 @@ h1 {
   column-gap: 12px;
   row-gap: 4px;
   width: 100%;
-  margin: -3px 0;
-  padding: 9px 8px;
-  border-radius: 16px;
+  padding: 6px 8px;
+  border-radius: 12px;
   color: var(--label);
   transition: background-color 180ms ease-out;
 }
@@ -257,7 +256,7 @@ h1 {
 
 .row-title {
   grid-area: title;
-  font-size: 17px;
+  font-size: 21px;
   font-weight: 600;
   letter-spacing: -0.016em;
 }
@@ -678,6 +677,7 @@ button:active,
 @media (hover: hover) and (pointer: fine) {
   .row:hover {
     background: var(--fill);
+    box-shadow: 0 -4px 0 var(--fill), 0 4px 0 var(--fill);
   }
 
   .links a:hover {
@@ -688,6 +688,7 @@ button:active,
 
 .row:active {
   background: var(--press);
+  box-shadow: 0 -4px 0 var(--press), 0 4px 0 var(--press);
   transition-duration: 0s;
 }
 
