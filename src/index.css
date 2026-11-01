@@ -234,9 +234,9 @@ h1 {
     "line line";
   column-gap: 12px;
   row-gap: 4px;
-  width: auto;
-  margin: -8px -12px;
-  padding: 14px 20px;
+  width: 100%;
+  margin: -8px 0;
+  padding: 14px 8px;
   border-radius: 16px;
   color: var(--label);
   transition: background-color 180ms ease-out;
