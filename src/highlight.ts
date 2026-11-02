@@ -1,4 +1,4 @@
-export type TokenKind = "text" | "keyword" | "string" | "comment" | "number";
+export type TokenKind = "text" | "keyword" | "string" | "comment" | "number" | "type" | "function";
 
 export type Token = {
   kind: TokenKind;
@@ -30,18 +30,46 @@ const KEYWORDS: Record<string, Set<string>> = {
     "int",
   ]),
   Java: new Set([
+    "abstract",
+    "boolean",
+    "break",
+    "case",
+    "catch",
     "class",
-    "public",
-    "static",
-    "void",
-    "int",
-    "return",
-    "new",
-    "if",
+    "continue",
+    "double",
     "else",
+    "enum",
+    "extends",
+    "false",
+    "final",
+    "finally",
+    "float",
     "for",
-    "while",
+    "if",
+    "implements",
     "import",
+    "instanceof",
+    "int",
+    "interface",
+    "long",
+    "new",
+    "null",
+    "package",
+    "private",
+    "protected",
+    "public",
+    "return",
+    "static",
+    "super",
+    "switch",
+    "this",
+    "throw",
+    "throws",
+    "true",
+    "try",
+    "void",
+    "while",
   ]),
   "C#": new Set([
     "public",
@@ -132,10 +160,7 @@ export function tokenizeLine(line: string, lang: string): Token[] {
       let end = index;
       while (end < line.length && /[A-Za-z0-9_]/.test(line[end])) end += 1;
       const word = line.slice(index, end);
-      tokens.push({
-        kind: keywords.has(word) ? "keyword" : "text",
-        text: word,
-      });
+      tokens.push({ kind: kindOfWord(word, line, end, keywords), text: word });
       index = end;
       continue;
     }
@@ -145,4 +170,13 @@ export function tokenizeLine(line: string, lang: string): Token[] {
   }
 
   return tokens;
+}
+
+function kindOfWord(word: string, line: string, end: number, keywords: Set<string>): TokenKind {
+  if (keywords.has(word)) return "keyword";
+  let look = end;
+  while (look < line.length && line[look] === " ") look += 1;
+  if (line[look] === "(") return "function";
+  if (/^[A-Z][A-Za-z0-9]*$/.test(word) && /[a-z]/.test(word)) return "type";
+  return "text";
 }
