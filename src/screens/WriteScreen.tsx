@@ -104,54 +104,60 @@ export function WriteScreen({ editId, onDone }: WriteScreenProps) {
     <main className="column composer">
       <h1>{editId ? "글 수정" : "글 쓰기"}</h1>
       <p className="intro">마크다운으로 적으면 posts 폴더의 md 파일이 됩니다.</p>
-      <label>
-        날짜
-        <input value={stamp} onChange={(event) => setStamp(event.target.value)} placeholder="20261101" inputMode="numeric" />
-      </label>
-      <label>
-        제목
-        <input value={problem} onChange={(event) => setProblem(event.target.value)} placeholder="문제 이름" />
-      </label>
-      <label>
-        언어
-        <input value={lang} onChange={(event) => setLang(event.target.value)} placeholder="C#" />
-      </label>
-      <label>
-        설명
-        <input value={description} onChange={(event) => setDescription(event.target.value)} placeholder="목록에 보일 한 줄" />
-      </label>
-      <label>
-        문제 링크
-        <input value={href} onChange={(event) => setHref(event.target.value)} placeholder="https://" />
-      </label>
-      <label>
-        링크 이름
-        <input value={label} onChange={(event) => setLabel(event.target.value)} placeholder="[BOJ 0000] 문제" />
-      </label>
-      <label>
-        본문
-        <textarea value={body} onChange={(event) => setBody(event.target.value)} rows={16} spellCheck={false} />
-      </label>
-      <p className="composer-hint">
-        **굵게** · `코드` · {"{blue}글{/}"} · {"{bg:gray}배경{/}"} · [이름](주소)
-      </p>
-      <section className="preview">
-        <h2>미리보기</h2>
-        {preview.error ? <p className="composer-message">{preview.error}</p> : null}
-        {preview.entry ? <Prose pieces={preview.entry.pieces} /> : null}
-        <div className="preview-foot">
-          {message ? <p className="composer-message">{message}</p> : null}
-          <div className="preview-actions">
-            <label>
-              등록 키
-              <input value={key} onChange={(event) => setKey(event.target.value)} type="password" placeholder="배포된 사이트에서만 필요" />
-            </label>
-            <button type="button" className="home-go press" onClick={publish} disabled={pending}>
-              {pending ? "올리는 중" : editId ? "저장" : "올리기"}
-            </button>
+      <div className="composer-meta">
+        <label>
+          날짜
+          <input value={stamp} onChange={(event) => setStamp(event.target.value)} placeholder="20261101" inputMode="numeric" />
+        </label>
+        <label>
+          제목
+          <input value={problem} onChange={(event) => setProblem(event.target.value)} placeholder="문제 이름" />
+        </label>
+        <label>
+          언어
+          <input value={lang} onChange={(event) => setLang(event.target.value)} placeholder="C#" />
+        </label>
+        <label>
+          설명
+          <input value={description} onChange={(event) => setDescription(event.target.value)} placeholder="목록에 보일 한 줄" />
+        </label>
+        <label>
+          문제 링크
+          <input value={href} onChange={(event) => setHref(event.target.value)} placeholder="https://" />
+        </label>
+        <label>
+          링크 이름
+          <input value={label} onChange={(event) => setLabel(event.target.value)} placeholder="[BOJ 0000] 문제" />
+        </label>
+      </div>
+      <div className="composer-split">
+        <section className="preview">
+          <h2>미리보기</h2>
+          {preview.error ? <p className="composer-message">{preview.error}</p> : null}
+          {preview.entry ? <Prose pieces={preview.entry.pieces} /> : null}
+        </section>
+        <div className="composer-form">
+          <label className="composer-body">
+            본문
+            <textarea value={body} onChange={(event) => setBody(event.target.value)} spellCheck={false} />
+          </label>
+          <p className="composer-hint">
+            Enter로 줄바꿈 · 빈 줄은 문단 · **굵게** · `코드` · {"{blue}글{/}"} · {"{bg:gray}배경{/}"} · [이름](주소)
+          </p>
+          <div className="preview-foot">
+            {message ? <p className="composer-message">{message}</p> : null}
+            <div className="preview-actions">
+              <label>
+                등록 키
+                <input value={key} onChange={(event) => setKey(event.target.value)} type="password" placeholder="배포된 사이트에서만 필요" />
+              </label>
+              <button type="button" className="home-go press" onClick={publish} disabled={pending}>
+                {pending ? "올리는 중" : editId ? "저장" : "올리기"}
+              </button>
+            </div>
           </div>
         </div>
-      </section>
+      </div>
     </main>
   );
 }

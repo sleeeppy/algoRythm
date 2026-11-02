@@ -207,10 +207,6 @@ button {
   transition: transform 280ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.column.is-dragging {
-  transition: none;
-}
-
 h1 {
   font-size: 32px;
   font-weight: 600;
@@ -274,6 +270,26 @@ h1 {
 .composer {
   display: flex;
   flex-direction: column;
+  gap: 22px;
+  width: min(1496px, 100%);
+}
+
+.composer-split {
+  display: grid;
+  grid-template-columns: 686px 686px;
+  gap: 80px;
+  align-items: start;
+}
+
+.composer-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px 16px;
+}
+
+.composer-form {
+  display: flex;
+  flex-direction: column;
   gap: 14px;
 }
 
@@ -286,13 +302,23 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-top: 18px;
-  padding-top: 28px;
-  border-top: 1px solid var(--separator);
+  position: sticky;
+  top: 72px;
+  height: calc(100svh - 96px);
+  max-height: calc(100svh - 96px);
+  padding: 18px 18px 22px;
+  border: 1px solid var(--separator);
+  border-radius: 16px;
+  background: var(--fill);
+  overflow: auto;
 }
 
 .preview h2 {
   margin: 0;
+}
+
+.preview .prose {
+  margin-top: 0;
 }
 
 .preview-foot {
@@ -352,6 +378,19 @@ h1 {
   font-variant-ligatures: common-ligatures contextual;
   font-feature-settings: "liga" 1, "calt" 1;
   letter-spacing: normal;
+}
+
+.composer-body {
+  display: flex;
+  flex-direction: column;
+  height: calc(100svh - 96px);
+  min-height: 360px;
+}
+
+.composer-body textarea {
+  flex: 1;
+  height: auto;
+  min-height: 0;
 }
 
 .composer-hint,
@@ -439,14 +478,20 @@ h1 {
 .prose {
   display: flex;
   flex-direction: column;
-  gap: 16px;
   margin-top: 28px;
   font-size: 16px;
   line-height: 1.62;
 }
 
+.prose > * + * {
+  margin-top: 36px;
+}
+
+.prose-bullet + .prose-bullet {
+  margin-top: 16px;
+}
+
 .prose p {
-  white-space: pre-wrap;
   line-height: 1.62;
 }
 
@@ -557,8 +602,86 @@ h1 {
   line-height: 1;
 }
 
-.code-block {
+.code-frame {
+  position: relative;
   margin: 8px 0 4px;
+}
+
+.code-copy {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--code-text) 10%, var(--code-bg));
+  box-shadow: 0 0 0 6px var(--code-bg);
+  color: color-mix(in srgb, var(--code-text) 78%, transparent);
+}
+
+.code-copy-glyph {
+  grid-area: 1 / 1;
+  display: grid;
+  place-items: center;
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity 220ms ease,
+    transform 420ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.code-copy-glyph.is-check {
+  opacity: 0;
+  transform: scale(0.62);
+}
+
+.code-copy.is-copied .code-copy-glyph.is-copy {
+  opacity: 0;
+  transform: scale(0.62);
+}
+
+.code-copy.is-copied .code-copy-glyph.is-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.code-copy.is-copied .code-copy-glyph.is-check path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: code-check-draw 460ms 70ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+@keyframes code-check-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.code-copy svg {
+  width: 15px;
+  height: 15px;
+}
+
+.code-copy svg rect,
+.code-copy svg path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.code-copy:hover {
+  color: var(--code-text);
+  background: color-mix(in srgb, var(--code-text) 16%, var(--code-bg));
+}
+
+.code-block {
+  margin: 0;
   padding: 16px 18px;
   overflow-x: auto;
   background: var(--code-bg);
@@ -805,25 +928,6 @@ button:active,
   font-size: 13px;
 }
 
-.drag-peek {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 2;
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 18px 28px;
-  background: var(--fill);
-  pointer-events: none;
-}
-
-.drag-peek span {
-  color: var(--secondary);
-  font-size: 13px;
-}
-
 .home.stars {
   cursor: pointer;
 }
@@ -865,6 +969,13 @@ button:active,
   .link-button:active,
   .day-enter {
     transform: none;
+  }
+
+  .code-copy-glyph,
+  .code-copy.is-copied .code-copy-glyph.is-check path {
+    transition: none;
+    animation: none;
+    stroke-dashoffset: 0;
   }
 }
 
@@ -1317,6 +1428,51 @@ html[data-nav="fade"]::view-transition-new(root) {
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation: none;
+  }
+}
+
+@media (max-width: 1496px) {
+  .composer {
+    width: min(730px, 100%);
+  }
+
+  .composer-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 860px) {
+  .composer {
+    width: min(692px, 100%);
+  }
+
+  .composer-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .composer-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .composer-form {
+    order: -1;
+  }
+
+  .preview {
+    position: static;
+    height: auto;
+    max-height: none;
+  }
+
+  .composer-body {
+    height: auto;
+    min-height: 0;
+  }
+
+  .composer-body textarea {
+    flex: none;
+    height: 70vh;
+    min-height: 320px;
   }
 }
 

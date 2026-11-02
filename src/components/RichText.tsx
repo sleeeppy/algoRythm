@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import type { RichSpan } from "../data.ts";
 
 type RichTextProps = {
@@ -19,8 +20,19 @@ function classNameFor(span: RichSpan) {
   return names.join(" ");
 }
 
+function Lines({ text }: { text: string }) {
+  const parts = text.split("\n");
+  return parts.map((part, index) => (
+    <Fragment key={index}>
+      {index > 0 ? <br /> : null}
+      {part}
+    </Fragment>
+  ));
+}
+
 function renderSpan(span: RichSpan, index: number) {
   const className = classNameFor(span);
+  const content = <Lines text={span.text} />;
   if (span.href) {
     return (
       <a
@@ -30,20 +42,20 @@ function renderSpan(span: RichSpan, index: number) {
         target="_blank"
         rel="noreferrer"
       >
-        {span.text}
+        {content}
       </a>
     );
   }
-  if (!className) return <span key={index}>{span.text}</span>;
+  if (!className) return <span key={index}>{content}</span>;
   return (
     <span key={index} className={className}>
-      {span.text}
+      {content}
     </span>
   );
 }
 
 export function RichText({ text, spans }: RichTextProps) {
-  if (!spans || spans.length === 0) return text;
+  if (!spans || spans.length === 0) return <Lines text={text} />;
   return spans.map((span, index) => {
     if (!span.code) return renderSpan(span, index);
     const match = span.text.match(/^(\n*)([\s\S]*?)(\n*)$/);

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type PointerEvent } from "react";
+import { useEffect } from "react";
 import { entries, findEntry } from "../data.ts";
 import { LanguageTag } from "../components/LanguageTag.tsx";
 import { Prose } from "../components/Prose.tsx";
@@ -16,84 +16,12 @@ export function DayScreen({ id, onOpen, onEdit }: DayScreenProps) {
   const older =
     index >= 0 && index < entries.length - 1 ? entries[index + 1] : undefined;
 
-  const [shift, setShift] = useState(0);
-  const [dragging, setDragging] = useState(false);
-  const gesture = useRef({
-    x: 0,
-    y: 0,
-    t: 0,
-    axis: "" as "" | "x" | "y",
-    active: false,
-    dx: 0,
-  });
-
   useEffect(() => {
     document.title = `${entry.problem} · AlgoRythm`;
   }, [entry.problem]);
 
-  function onGestureDown(event: PointerEvent<HTMLElement>) {
-    if ((event.target as HTMLElement).closest("a, button, pre")) return;
-    gesture.current = {
-      x: event.clientX,
-      y: event.clientY,
-      t: performance.now(),
-      axis: "",
-      active: true,
-      dx: 0,
-    };
-  }
-
-  function onGestureMove(event: PointerEvent<HTMLElement>) {
-    const state = gesture.current;
-    if (!state.active) return;
-    const dx = event.clientX - state.x;
-    const dy = event.clientY - state.y;
-    if (!state.axis) {
-      if (Math.hypot(dx, dy) < 12) return;
-      state.axis = Math.abs(dx) > Math.abs(dy) * 1.2 ? "x" : "y";
-      if (state.axis === "y") {
-        state.active = false;
-        return;
-      }
-      event.currentTarget.setPointerCapture(event.pointerId);
-      setDragging(true);
-    }
-    if (state.axis !== "x") return;
-    let shown = dx;
-    if (dx > 0 && !older) shown = dx * 0.22;
-    if (dx < 0 && !newer) shown = dx * 0.22;
-    state.dx = shown;
-    setShift(shown);
-  }
-
-  function onGestureUp() {
-    const state = gesture.current;
-    if (!state.active || state.axis !== "x") {
-      state.active = false;
-      setDragging(false);
-      setShift(0);
-      return;
-    }
-    const elapsed = Math.max(16, performance.now() - state.t);
-    const velocity = (state.dx / elapsed) * 1000;
-    const projected = state.dx + velocity * 0.08;
-    state.active = false;
-    setDragging(false);
-    setShift(0);
-    if (projected > 88 && older) onOpen(older.id, "back");
-    else if (projected < -88 && newer) onOpen(newer.id, "forward");
-  }
-
   return (
-    <main
-      className={dragging ? "column is-dragging" : "column"}
-      data-article=""
-      style={{ transform: shift ? `translateX(${shift}px)` : undefined }}
-      onPointerDown={onGestureDown}
-      onPointerMove={onGestureMove}
-      onPointerUp={onGestureUp}
-      onPointerCancel={onGestureUp}
-    >
+    <main className="column" data-article="">
       <p className="meta">
         <time dateTime={entry.stamp}>{entry.stamp}</time>
         <LanguageTag lang={entry.lang} />
