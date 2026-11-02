@@ -17,8 +17,9 @@ export function findEntry(id: string): Entry {
 }
 
 export function excerpt(entry: Entry): string {
+  if (entry.description.trim()) return entry.description.trim();
   const text = entry.pieces.find((piece) => piece.kind === "text" || piece.kind === "bullet");
-  if (!text || (text.kind !== "text" && text.kind !== "bullet")) return entry.problem;
+  if (!text || (text.kind !== "text" && text.kind !== "bullet")) return "";
   const line = text.text.split("\n").find((row) => row.trim());
-  return line?.trim() || entry.problem;
+  return line?.trim() || "";
 }

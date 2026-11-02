@@ -79,6 +79,7 @@ export function toMarkdown(entry: Entry): string {
     `stamp: ${quote(entry.stamp)}`,
     `problem: ${quote(entry.problem)}`,
     `lang: ${quote(entry.lang)}`,
+    `description: ${quote(entry.description)}`,
   ];
   if (entry.links.length > 0) {
     lines.push("links:");
@@ -95,6 +96,7 @@ export function composePost(input: {
   stamp: string;
   problem: string;
   lang: string;
+  description: string;
   links: EntryLink[];
   body: string;
 }) {
@@ -103,6 +105,7 @@ export function composePost(input: {
     stamp: input.stamp,
     problem: input.problem,
     lang: input.lang,
+    description: input.description,
     links: input.links,
     pieces: [],
   }).trimEnd();
@@ -124,7 +127,8 @@ function parseFrontmatter(block: string) {
     problem: string;
     lang: string;
     links: EntryLink[];
-  } = { stamp: "", problem: "", lang: "", links: [] };
+    description: string;
+  } = { stamp: "", problem: "", lang: "", links: [], description: "" };
   let link: EntryLink | null = null;
   for (const line of block.split("\n")) {
     if (line.startsWith("  - href:")) {
@@ -143,6 +147,7 @@ function parseFrontmatter(block: string) {
     if (key === "stamp") entry.stamp = value;
     if (key === "problem") entry.problem = value;
     if (key === "lang") entry.lang = value;
+    if (key === "description") entry.description = value;
   }
   if (link?.href) entry.links.push(link);
   return entry;
@@ -314,6 +319,7 @@ export function parsePost(source: string): Entry {
     stamp: meta.stamp,
     problem: meta.problem,
     lang: meta.lang,
+    description: meta.description,
     links: meta.links,
     pieces: parseBody(body),
   };

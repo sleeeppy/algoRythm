@@ -45,6 +45,7 @@ export type Entry = {
   stamp: string;
   problem: string;
   lang: string;
+  description: string;
   links: EntryLink[];
   pieces: Piece[];
 };

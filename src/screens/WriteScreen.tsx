@@ -22,6 +22,7 @@ export function WriteScreen({ onDone }: WriteScreenProps) {
   const [stamp, setStamp] = useState("");
   const [problem, setProblem] = useState("");
   const [lang, setLang] = useState("");
+  const [description, setDescription] = useState("");
   const [href, setHref] = useState("");
   const [label, setLabel] = useState("");
   const [body, setBody] = useState(sample);
@@ -35,13 +36,13 @@ export function WriteScreen({ onDone }: WriteScreenProps) {
       : [];
     try {
       return {
-        entry: parsePost(composePost({ stamp: stamp || "20260101", problem: problem || "제목", lang: lang || "Text", links, body })),
+        entry: parsePost(composePost({ stamp: stamp || "20260101", problem: problem || "제목", lang: lang || "Text", description, links, body })),
         error: "",
       };
     } catch (error) {
       return { entry: null, error: error instanceof Error ? error.message : "미리보기를 만들지 못했습니다." };
     }
-  }, [stamp, problem, lang, href, label, body]);
+  }, [stamp, problem, lang, description, href, label, body]);
 
   async function publish() {
     setPending(true);
@@ -50,7 +51,7 @@ export function WriteScreen({ onDone }: WriteScreenProps) {
       const links: EntryLink[] = href.trim()
         ? [{ href: href.trim(), label: label.trim() || href.trim() }]
         : [];
-      const content = composePost({ stamp, problem, lang, links, body });
+      const content = composePost({ stamp, problem, lang, description, links, body });
       parsePost(content);
       const response = await fetch("/api/publish", {
         method: "POST",
@@ -83,6 +84,10 @@ export function WriteScreen({ onDone }: WriteScreenProps) {
       <label>
         언어
         <input value={lang} onChange={(event) => setLang(event.target.value)} placeholder="C#" />
+      </label>
+      <label>
+        설명
+        <input value={description} onChange={(event) => setDescription(event.target.value)} placeholder="목록에 보일 한 줄" />
       </label>
       <label>
         문제 링크

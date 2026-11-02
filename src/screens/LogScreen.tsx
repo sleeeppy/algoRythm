@@ -42,7 +42,7 @@ function EntryRow({
       <span className="row-date">{entry.stamp}</span>
       <LanguageTag lang={entry.lang} />
       <span className="row-title">{entry.problem}</span>
-      <span className="row-line">{excerpt(entry)}</span>
+      {excerpt(entry) ? <span className="row-line">{excerpt(entry)}</span> : null}
     </button>
   );
 }
