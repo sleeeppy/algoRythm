@@ -24,13 +24,22 @@ function isHistoryState(value: unknown): value is HistoryState {
   );
 }
 
+function readHistory(): { view: View; id: string | null } {
+  if (isHistoryState(history.state)) {
+    return { view: history.state.view, id: history.state.id };
+  }
+  return { view: "home", id: null };
+}
+
+const initialHistory = readHistory();
+
 export default function App() {
-  const [view, setView] = useState<View>("home");
-  const [entryId, setEntryId] = useState<string | null>(null);
+  const [view, setView] = useState<View>(initialHistory.view);
+  const [entryId, setEntryId] = useState<string | null>(initialHistory.id);
 
   useEffect(() => {
     history.scrollRestoration = "manual";
-    if (!isHistoryState(history.state) || history.state.view !== "home") {
+    if (!isHistoryState(history.state)) {
       history.replaceState(
         { algorhythm: true, view: "home", id: null } satisfies HistoryState,
         "",
