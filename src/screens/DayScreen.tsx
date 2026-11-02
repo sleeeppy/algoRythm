@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState, type PointerEvent } from "react";
 import { entries, findEntry } from "../data.ts";
-import { CodeBlock } from "../components/CodeBlock.tsx";
 import { LanguageTag } from "../components/LanguageTag.tsx";
-import { RichText } from "../components/RichText.tsx";
+import { Prose } from "../components/Prose.tsx";
 
 type DayScreenProps = {
   id: string;
@@ -119,18 +118,7 @@ export function DayScreen({ id, onOpen }: DayScreenProps) {
           ))}
         </div>
       </div>
-      <div className="prose">
-        {entry.pieces.map((piece, index) => {
-          if (piece.kind === "code") {
-            return <CodeBlock key={index} lang={piece.lang} code={piece.code} />;
-          }
-          return (
-            <p key={index} className={piece.kind === "bullet" ? "prose-bullet" : undefined}>
-              <RichText text={piece.text} spans={piece.spans} />
-            </p>
-          );
-        })}
-      </div>
+      <Prose pieces={entry.pieces} />
       <nav className="adjacent" aria-label="다른 날">
         {older ? (
           <button type="button" className="side press" onClick={() => onOpen(older.id, "back")}>

@@ -4,9 +4,10 @@ import { LanguageTag } from "../components/LanguageTag.tsx";
 
 type LogScreenProps = {
   onOpen: (id: string) => void;
+  onWrite: () => void;
 };
 
-export function LogScreen({ onOpen }: LogScreenProps) {
+export function LogScreen({ onOpen, onWrite }: LogScreenProps) {
   useEffect(() => {
     document.title = "기록 · AlgoRythm";
   }, []);
@@ -15,6 +16,9 @@ export function LogScreen({ onOpen }: LogScreenProps) {
     <main className="column">
       <h1>기록</h1>
       <p className="intro">AlgoRythm</p>
+      <button type="button" className="write-link press" onClick={onWrite}>
+        글 쓰기
+      </button>
       <ul className="list">
         {entries.map((entry) => (
           <li key={entry.id}>

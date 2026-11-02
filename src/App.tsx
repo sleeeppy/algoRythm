@@ -5,8 +5,9 @@ import { runTransition, type NavDir } from "./transition.ts";
 import { DayScreen } from "./screens/DayScreen.tsx";
 import { HomeScreen } from "./screens/HomeScreen.tsx";
 import { LogScreen } from "./screens/LogScreen.tsx";
+import { WriteScreen } from "./screens/WriteScreen.tsx";
 
-type View = "home" | "log" | "day";
+type View = "home" | "log" | "day" | "write";
 
 type HistoryState = {
   algorhythm: true;
@@ -19,7 +20,7 @@ function isHistoryState(value: unknown): value is HistoryState {
   const state = value as HistoryState;
   return (
     state.algorhythm === true &&
-    (state.view === "home" || state.view === "log" || state.view === "day")
+    (state.view === "home" || state.view === "log" || state.view === "day" || state.view === "write")
   );
 }
 
@@ -103,6 +104,12 @@ export default function App() {
     history.pushState(next, "");
   }
 
+  function openWrite() {
+    const next = { algorhythm: true, view: "write", id: null } as const;
+    show("forward", next);
+    history.pushState(next, "");
+  }
+
   function back() {
     if (isHistoryState(history.state) && history.state.view !== "home") {
       history.back();
@@ -120,11 +127,12 @@ export default function App() {
   return (
     <>
       <ProgressBar watch={watch} />
-      <TopBar backLabel={view === "day" ? "기록" : "메인"} onBack={view === "home" ? undefined : back} />
+      <TopBar backLabel={view === "log" ? "메인" : "기록"} onBack={view === "home" ? undefined : back} />
       {view === "home" ? (
         <HomeScreen onOpenLog={openLog} />
       ) : null}
-      {view === "log" ? <LogScreen onOpen={(id) => openDay(id, "forward")} /> : null}
+      {view === "log" ? <LogScreen onOpen={(id) => openDay(id, "forward")} onWrite={openWrite} /> : null}
+      {view === "write" ? <WriteScreen onDone={back} /> : null}
       {view === "day" && entryId ? (
         <DayScreen key={entryId} id={entryId} onOpen={(id, dir) => openDay(id, dir)} />
       ) : null}

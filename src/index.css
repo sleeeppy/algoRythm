@@ -11,13 +11,14 @@
   --bar: rgba(247, 247, 246, 0.86);
   --progress: #1a1a1a;
   --progress-track: rgba(26, 26, 26, 0.12);
-  --code-bg: #f1f1ef;
-  --code-keyword: #8a4b32;
-  --code-string: #6b5436;
-  --code-comment: #6e6e6e;
-  --code-number: #3e5c56;
-  --inline-bg: rgba(196, 72, 66, 0.12);
-  --inline-fg: #b23c38;
+  --code-bg: #f4f6f8;
+  --code-text: #1f2328;
+  --code-keyword: #0033b3;
+  --code-string: #067d17;
+  --code-comment: #8c8c8c;
+  --code-number: #1750eb;
+  --inline-bg: rgba(31, 35, 40, 0.06);
+  --inline-fg: #6d625c;
   --n-gray: #6f6e6a;
   --n-brown: #8d624c;
   --n-orange: #b86a14;
@@ -68,13 +69,14 @@
   --bar: rgba(16, 16, 16, 0.86);
   --progress: #f3f3f1;
   --progress-track: rgba(243, 243, 241, 0.16);
-  --code-bg: #171717;
-  --code-keyword: #e0b08a;
-  --code-string: #d7c4a4;
-  --code-comment: #8e8e8e;
-  --code-number: #b7c4b4;
-  --inline-bg: rgba(255, 120, 112, 0.18);
-  --inline-fg: #ff9b94;
+  --code-bg: #1e1f22;
+  --code-text: #bcbec4;
+  --code-keyword: #cf8e6d;
+  --code-string: #6aab73;
+  --code-comment: #7a7e85;
+  --code-number: #2aacb8;
+  --inline-bg: rgba(188, 190, 196, 0.12);
+  --inline-fg: #d2cdc8;
   --n-gray: #a3a3a1;
   --n-brown: #c49a84;
   --n-orange: #e39a4a;
@@ -214,6 +216,57 @@ h1 {
 .intro {
   margin-top: 6px;
   color: var(--secondary);
+}
+
+.write-link {
+  margin-top: 14px;
+  color: var(--blue);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.composer {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.composer h2 {
+  margin-top: 12px;
+  font-size: 22px;
+}
+
+.composer label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--secondary);
+  font-size: 13px;
+}
+
+.composer input,
+.composer textarea {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  background: var(--fill);
+  color: var(--label);
+  font: inherit;
+  padding: 12px 14px;
+}
+
+.composer textarea {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.composer-hint,
+.composer-message {
+  color: var(--secondary);
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 .list {
@@ -425,6 +478,7 @@ h1 {
   letter-spacing: 0;
   white-space: pre;
   tab-size: 4;
+  color: var(--code-text);
 }
 
 .tok-keyword {

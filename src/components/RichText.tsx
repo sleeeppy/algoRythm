@@ -6,14 +6,15 @@ type RichTextProps = {
 };
 
 function classNameFor(span: RichSpan) {
+  const colors = span.color?.split(/\s+/).filter(Boolean) ?? [];
   const names = [
     span.bold ? "rt-bold" : "",
     span.italic ? "rt-italic" : "",
     span.strike ? "rt-strike" : "",
     span.underline ? "rt-under" : "",
     span.code ? "rt-code" : "",
-    span.color ? `rt-${span.color}` : "",
-    span.color?.endsWith("_background") ? "rt-bg" : "",
+    ...colors.map((color) => `rt-${color}`),
+    colors.some((color) => color.endsWith("_background")) ? "rt-bg" : "",
   ].filter(Boolean);
   return names.join(" ");
 }
