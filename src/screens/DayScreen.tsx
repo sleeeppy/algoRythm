@@ -119,6 +119,12 @@ export function DayScreen({ id, onOpen, onEdit }: DayScreenProps) {
         </div>
       </div>
       <Prose pieces={entry.pieces} />
+      <div className="edit-row">
+        <button type="button" className="edit-link press" onClick={() => onEdit(entry.id)}>
+          <PenIcon />
+          <span>수정</span>
+        </button>
+      </div>
       <nav className="adjacent" aria-label="다른 날">
         {older ? (
           <button type="button" className="side press" onClick={() => onOpen(older.id, "back")}>
@@ -147,12 +153,6 @@ export function DayScreen({ id, onOpen, onEdit }: DayScreenProps) {
           <span />
         )}
       </nav>
-      <div className="edit-row">
-        <button type="button" className="edit-link press" onClick={() => onEdit(entry.id)}>
-          <PenIcon />
-          <span>수정</span>
-        </button>
-      </div>
     </main>
   );
 }

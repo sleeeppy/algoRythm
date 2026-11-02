@@ -73,12 +73,12 @@
   --progress-track: rgba(243, 243, 241, 0.16);
   --code-bg: #1e1f22;
   --code-text: #bcbec4;
-  --code-keyword: #4ec9b0;
-  --code-string: #6aab73;
+  --code-keyword: #98cec4;
+  --code-string: #7dba86;
   --code-comment: #7a7e85;
-  --code-number: #cf8e6d;
-  --code-type: #cf8e6d;
-  --code-function: #4ec9b0;
+  --code-number: #e0b696;
+  --code-type: #e0b696;
+  --code-function: #98cec4;
   --inline-bg: rgba(188, 190, 196, 0.12);
   --inline-fg: #d2cdc8;
   --n-gray: #a3a3a1;
@@ -250,7 +250,8 @@ h1 {
 .edit-row {
   display: flex;
   justify-content: flex-end;
-  margin-top: 22px;
+  margin-top: 48px;
+  margin-bottom: 14px;
 }
 
 .write-link svg,
@@ -553,7 +554,7 @@ h1 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 32px;
-  margin-top: 72px;
+  margin-top: 0;
   padding-top: 20px;
   border-top: 1px solid var(--separator);
 }
