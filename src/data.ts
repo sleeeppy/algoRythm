@@ -8,9 +8,19 @@ const files = import.meta.glob("../posts/*.md", {
   eager: true,
 });
 
-export const entries: Entry[] = Object.values(files)
-  .map((source) => parsePost(source as string))
+const sources = new Map<string, string>();
+for (const [file, source] of Object.entries(files)) {
+  const stamp = file.match(/(\d{8})\.md$/)?.[1];
+  if (stamp) sources.set(stamp, source as string);
+}
+
+export const entries: Entry[] = [...sources.values()]
+  .map((source) => parsePost(source))
   .sort((left, right) => right.stamp.localeCompare(left.stamp));
+
+export function rawPost(id: string) {
+  return sources.get(id) ?? "";
+}
 
 export function findEntry(id: string): Entry {
   return entries.find((entry) => entry.id === id) ?? entries[0];

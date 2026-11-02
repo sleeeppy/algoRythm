@@ -104,8 +104,8 @@ export default function App() {
     history.pushState(next, "");
   }
 
-  function openWrite() {
-    const next = { algorhythm: true, view: "write", id: null } as const;
+  function openEdit(id: string) {
+    const next = { algorhythm: true, view: "write", id } as const;
     show("forward", next);
     history.pushState(next, "");
   }
@@ -131,10 +131,10 @@ export default function App() {
       {view === "home" ? (
         <HomeScreen onOpenLog={openLog} />
       ) : null}
-      {view === "log" ? <LogScreen onOpen={(id) => openDay(id, "forward")} onWrite={openWrite} /> : null}
-      {view === "write" ? <WriteScreen onDone={back} /> : null}
+      {view === "log" ? <LogScreen onOpen={(id) => openDay(id, "forward")} onWrite={() => openEdit("")} /> : null}
+      {view === "write" ? <WriteScreen key={entryId ?? "new"} editId={entryId} onDone={back} /> : null}
       {view === "day" && entryId ? (
-        <DayScreen key={entryId} id={entryId} onOpen={(id, dir) => openDay(id, dir)} />
+        <DayScreen key={entryId} id={entryId} onOpen={(id, dir) => openDay(id, dir)} onEdit={openEdit} />
       ) : null}
     </>
   );

@@ -324,3 +324,10 @@ export function parsePost(source: string): Entry {
     pieces: parseBody(body),
   };
 }
+
+export function readPost(source: string) {
+  const matched = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
+  const meta = parseFrontmatter(matched?.[1] ?? "");
+  const body = (matched ? source.slice(matched[0].length) : source).replace(/^\n/, "");
+  return { ...meta, body };
+}

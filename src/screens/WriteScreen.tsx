@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
+import { rawPost } from "../data.ts";
 import { Prose } from "../components/Prose.tsx";
-import { composePost, parsePost } from "../markdown.ts";
+import { composePost, parsePost, readPost } from "../markdown.ts";
 import type { EntryLink } from "../types.ts";
 
 const sample = `여기에 본문을 적습니다.
@@ -15,17 +16,47 @@ Console.WriteLine("hello");
 \`\`\``;
 
 type WriteScreenProps = {
+  editId?: string | null;
   onDone: () => void;
 };
 
-export function WriteScreen({ onDone }: WriteScreenProps) {
-  const [stamp, setStamp] = useState("");
-  const [problem, setProblem] = useState("");
-  const [lang, setLang] = useState("");
-  const [description, setDescription] = useState("");
-  const [href, setHref] = useState("");
-  const [label, setLabel] = useState("");
-  const [body, setBody] = useState(sample);
+function draftFrom(editId?: string | null) {
+  const source = editId ? rawPost(editId) : "";
+  if (!source) {
+    return {
+      stamp: "",
+      problem: "",
+      lang: "",
+      description: "",
+      href: "",
+      label: "",
+      extra: [] as EntryLink[],
+      body: sample,
+    };
+  }
+  const post = readPost(source);
+  const [first, ...extra] = post.links;
+  return {
+    stamp: post.stamp,
+    problem: post.problem,
+    lang: post.lang,
+    description: post.description,
+    href: first?.href ?? "",
+    label: first?.label ?? "",
+    extra,
+    body: post.body,
+  };
+}
+
+export function WriteScreen({ editId, onDone }: WriteScreenProps) {
+  const [draft] = useState(() => draftFrom(editId));
+  const [stamp, setStamp] = useState(draft.stamp);
+  const [problem, setProblem] = useState(draft.problem);
+  const [lang, setLang] = useState(draft.lang);
+  const [description, setDescription] = useState(draft.description);
+  const [href, setHref] = useState(draft.href);
+  const [label, setLabel] = useState(draft.label);
+  const [body, setBody] = useState(draft.body);
   const [key, setKey] = useState("");
   const [message, setMessage] = useState("");
   const [pending, setPending] = useState(false);
@@ -48,9 +79,10 @@ export function WriteScreen({ onDone }: WriteScreenProps) {
     setPending(true);
     setMessage("");
     try {
-      const links: EntryLink[] = href.trim()
-        ? [{ href: href.trim(), label: label.trim() || href.trim() }]
-        : [];
+      const links: EntryLink[] = [
+        ...(href.trim() ? [{ href: href.trim(), label: label.trim() || href.trim() }] : []),
+        ...draft.extra,
+      ];
       const content = composePost({ stamp, problem, lang, description, links, body });
       parsePost(content);
       const response = await fetch("/api/publish", {
@@ -71,7 +103,7 @@ export function WriteScreen({ onDone }: WriteScreenProps) {
 
   return (
     <main className="column composer">
-      <h1>글 쓰기</h1>
+      <h1>{editId ? "글 수정" : "글 쓰기"}</h1>
       <p className="intro">마크다운으로 적으면 posts 폴더의 md 파일이 됩니다.</p>
       <label>
         날짜
@@ -109,7 +141,7 @@ export function WriteScreen({ onDone }: WriteScreenProps) {
         <input value={key} onChange={(event) => setKey(event.target.value)} type="password" placeholder="배포된 사이트에서만 필요" />
       </label>
       <button type="button" className="home-go press" onClick={publish} disabled={pending}>
-        {pending ? "올리는 중" : "올리기"}
+        {pending ? "올리는 중" : editId ? "저장" : "올리기"}
       </button>
       {message ? <p className="composer-message">{message}</p> : null}
       <h2>미리보기</h2>

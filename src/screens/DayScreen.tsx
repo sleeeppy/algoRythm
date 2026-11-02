@@ -6,10 +6,10 @@ import { Prose } from "../components/Prose.tsx";
 type DayScreenProps = {
   id: string;
   onOpen: (id: string, dir?: "forward" | "back") => void;
-  embedded?: boolean;
+  onEdit: (id: string) => void;
 };
 
-export function DayScreen({ id, onOpen }: DayScreenProps) {
+export function DayScreen({ id, onOpen, onEdit }: DayScreenProps) {
   const entry = findEntry(id);
   const index = entries.findIndex((item) => item.id === entry.id);
   const newer = index > 0 ? entries[index - 1] : undefined;
@@ -97,6 +97,10 @@ export function DayScreen({ id, onOpen }: DayScreenProps) {
       <p className="meta">
         <time dateTime={entry.stamp}>{entry.stamp}</time>
         <LanguageTag lang={entry.lang} />
+        <button type="button" className="edit-link press" onClick={() => onEdit(entry.id)}>
+          <PenIcon />
+          <span>수정</span>
+        </button>
       </p>
       <div className="title-row">
         <h1>{entry.problem}</h1>
@@ -148,5 +152,14 @@ export function DayScreen({ id, onOpen }: DayScreenProps) {
         )}
       </nav>
     </main>
+  );
+}
+
+function PenIcon() {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M9.2 2.4l4.4 4.4L6.2 14.2H1.8V9.8L9.2 2.4z" />
+      <path d="M7.6 4l4.4 4.4" />
+    </svg>
   );
 }
