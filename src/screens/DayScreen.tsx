@@ -97,10 +97,6 @@ export function DayScreen({ id, onOpen, onEdit }: DayScreenProps) {
       <p className="meta">
         <time dateTime={entry.stamp}>{entry.stamp}</time>
         <LanguageTag lang={entry.lang} />
-        <button type="button" className="edit-link press" onClick={() => onEdit(entry.id)}>
-          <PenIcon />
-          <span>수정</span>
-        </button>
       </p>
       <div className="title-row">
         <h1>{entry.problem}</h1>
@@ -151,6 +147,12 @@ export function DayScreen({ id, onOpen, onEdit }: DayScreenProps) {
           <span />
         )}
       </nav>
+      <div className="edit-row">
+        <button type="button" className="edit-link press" onClick={() => onEdit(entry.id)}>
+          <PenIcon />
+          <span>수정</span>
+        </button>
+      </div>
     </main>
   );
 }

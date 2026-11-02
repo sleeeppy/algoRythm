@@ -13,12 +13,12 @@
   --progress-track: rgba(26, 26, 26, 0.12);
   --code-bg: #f4f6f8;
   --code-text: #1f2328;
-  --code-keyword: #0033b3;
+  --code-keyword: #0e7c86;
   --code-string: #067d17;
   --code-comment: #8c8c8c;
-  --code-number: #1750eb;
-  --code-type: #0e7c86;
-  --code-function: #0033b3;
+  --code-number: #9a5b32;
+  --code-type: #9a5b32;
+  --code-function: #0e7c86;
   --inline-bg: rgba(31, 35, 40, 0.06);
   --inline-fg: #6d625c;
   --n-gray: #6f6e6a;
@@ -73,12 +73,12 @@
   --progress-track: rgba(243, 243, 241, 0.16);
   --code-bg: #1e1f22;
   --code-text: #bcbec4;
-  --code-keyword: #cf8e6d;
+  --code-keyword: #4ec9b0;
   --code-string: #6aab73;
   --code-comment: #7a7e85;
-  --code-number: #2aacb8;
-  --code-type: #4ec9b0;
-  --code-function: #cf8e6d;
+  --code-number: #cf8e6d;
+  --code-type: #cf8e6d;
+  --code-function: #4ec9b0;
   --inline-bg: rgba(188, 190, 196, 0.12);
   --inline-fg: #d2cdc8;
   --n-gray: #a3a3a1;
@@ -244,7 +244,13 @@ h1 {
 }
 
 .edit-link {
-  margin-left: auto;
+  margin-left: 0;
+}
+
+.edit-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 22px;
 }
 
 .write-link svg,

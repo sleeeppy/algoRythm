@@ -173,6 +173,7 @@ export function tokenizeLine(line: string, lang: string): Token[] {
 }
 
 function kindOfWord(word: string, line: string, end: number, keywords: Set<string>): TokenKind {
+  if (PRIMITIVES.has(word)) return "type";
   if (keywords.has(word)) return "keyword";
   let look = end;
   while (look < line.length && line[look] === " ") look += 1;
@@ -180,3 +181,24 @@ function kindOfWord(word: string, line: string, end: number, keywords: Set<strin
   if (/^[A-Z][A-Za-z0-9]*$/.test(word) && /[a-z]/.test(word)) return "type";
   return "text";
 }
+
+const PRIMITIVES = new Set([
+  "int",
+  "long",
+  "short",
+  "byte",
+  "float",
+  "double",
+  "boolean",
+  "bool",
+  "char",
+  "void",
+  "string",
+  "decimal",
+  "object",
+  "sbyte",
+  "uint",
+  "ulong",
+  "ushort",
+  "auto",
+]);
