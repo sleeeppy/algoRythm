@@ -27,7 +27,16 @@ const KEYWORDS: Record<string, Set<string>> = {
     "None",
     "break",
     "continue",
-    "int",
+    "pass",
+    "lambda",
+    "with",
+    "as",
+    "is",
+    "try",
+    "except",
+    "finally",
+    "raise",
+    "yield",
   ]),
   Java: new Set([
     "abstract",
@@ -119,16 +128,18 @@ const KEYWORDS: Record<string, Set<string>> = {
 
 export function tokenizeLine(line: string, lang: string): Token[] {
   const keywords = KEYWORDS[lang] ?? new Set<string>();
+  const python = lang === "Python";
   const tokens: Token[] = [];
+  const parens: boolean[] = [];
   let index = 0;
 
   while (index < line.length) {
-    if (lang === "Python" && line[index] === "#") {
+    if (python && line[index] === "#") {
       tokens.push({ kind: "comment", text: line.slice(index) });
       break;
     }
 
-    if (lang !== "Python" && line.startsWith("//", index)) {
+    if (!python && line.startsWith("//", index)) {
       tokens.push({ kind: "comment", text: line.slice(index) });
       break;
     }
@@ -142,7 +153,8 @@ export function tokenizeLine(line: string, lang: string): Token[] {
         end += 1;
       }
       if (end < line.length) end += 1;
-      tokens.push({ kind: "string", text: line.slice(index, end) });
+      const literal = line.slice(index, end);
+      tokens.push(...(python ? splitPlaceholders(literal) : [{ kind: "string" as const, text: literal }]));
       index = end;
       continue;
     }
@@ -150,7 +162,7 @@ export function tokenizeLine(line: string, lang: string): Token[] {
     const previous = index > 0 ? line[index - 1] : "";
     if (/[0-9]/.test(character) && !/[A-Za-z_]/.test(previous)) {
       let end = index;
-      while (end < line.length && /[0-9]/.test(line[end])) end += 1;
+      while (end < line.length && /[0-9.]/.test(line[end])) end += 1;
       tokens.push({ kind: "number", text: line.slice(index, end) });
       index = end;
       continue;
@@ -160,9 +172,18 @@ export function tokenizeLine(line: string, lang: string): Token[] {
       let end = index;
       while (end < line.length && /[A-Za-z0-9_]/.test(line[end])) end += 1;
       const word = line.slice(index, end);
-      tokens.push({ kind: kindOfWord(word, line, end, keywords), text: word });
+      let kind = kindOfWord(word, line, end, keywords, python);
+      if (python && kind === "text" && parens.includes(true)) kind = "function";
+      tokens.push({ kind, text: word });
       index = end;
       continue;
+    }
+
+    if (character === "(") {
+      const last = lastWord(tokens);
+      parens.push(last?.kind === "function" || last?.kind === "type");
+    } else if (character === ")") {
+      parens.pop();
     }
 
     tokens.push({ kind: "text", text: character });
@@ -172,8 +193,37 @@ export function tokenizeLine(line: string, lang: string): Token[] {
   return tokens;
 }
 
-function kindOfWord(word: string, line: string, end: number, keywords: Set<string>): TokenKind {
-  if (PRIMITIVES.has(word)) return "type";
+function lastWord(tokens: Token[]): Token | undefined {
+  for (let at = tokens.length - 1; at >= 0; at -= 1) {
+    const token = tokens[at];
+    if (token.text.trim() === "") continue;
+    return /^[A-Za-z_]/.test(token.text) ? token : undefined;
+  }
+  return undefined;
+}
+
+function splitPlaceholders(literal: string): Token[] {
+  const tokens: Token[] = [];
+  const pattern = /\{([^{}]*)\}/g;
+  let from = 0;
+  for (const match of literal.matchAll(pattern)) {
+    const start = match.index ?? 0;
+    tokens.push({ kind: "string", text: literal.slice(from, start + 1) });
+    if (match[1]) tokens.push({ kind: "keyword", text: match[1] });
+    from = start + match[0].length - 1;
+  }
+  tokens.push({ kind: "string", text: literal.slice(from) });
+  return tokens.filter((token) => token.text !== "");
+}
+
+function kindOfWord(
+  word: string,
+  line: string,
+  end: number,
+  keywords: Set<string>,
+  python: boolean,
+): TokenKind {
+  if (python ? PYTHON_TYPES.has(word) : PRIMITIVES.has(word)) return "type";
   if (keywords.has(word)) return "keyword";
   let look = end;
   while (look < line.length && line[look] === " ") look += 1;
@@ -181,6 +231,22 @@ function kindOfWord(word: string, line: string, end: number, keywords: Set<strin
   if (/^[A-Z][A-Za-z0-9]*$/.test(word) && /[a-z]/.test(word)) return "type";
   return "text";
 }
+
+const PYTHON_TYPES = new Set([
+  "int",
+  "float",
+  "str",
+  "bool",
+  "list",
+  "dict",
+  "set",
+  "tuple",
+  "bytes",
+  "object",
+  "complex",
+  "frozenset",
+  "type",
+]);
 
 const PRIMITIVES = new Set([
   "int",

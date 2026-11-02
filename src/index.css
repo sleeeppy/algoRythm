@@ -13,12 +13,12 @@
   --progress-track: rgba(26, 26, 26, 0.12);
   --code-bg: #f4f6f8;
   --code-text: #1f2328;
-  --code-keyword: #0e7c86;
-  --code-string: #067d17;
-  --code-comment: #8c8c8c;
-  --code-number: #9a5b32;
-  --code-type: #9a5b32;
-  --code-function: #0e7c86;
+  --code-keyword: #2f5fd0;
+  --code-string: #946a24;
+  --code-comment: #4f8a3a;
+  --code-number: #c2457f;
+  --code-type: #8344d6;
+  --code-function: #0b875f;
   --inline-bg: rgba(31, 35, 40, 0.06);
   --inline-fg: #6d625c;
   --n-gray: #6f6e6a;
@@ -47,7 +47,8 @@
   --mention-hover: rgba(28, 27, 24, 0.14);
   --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
     "Apple SD Gothic Neo", system-ui, sans-serif;
-  --mono: "SF Mono", ui-monospace, Menlo, "Apple SD Gothic Neo", monospace;
+  --mono: "JetBrains Mono Variable", "JetBrains Mono", "SF Mono", ui-monospace, Menlo,
+    "Apple SD Gothic Neo", monospace;
   font-family: var(--sans);
   font-size: 17px;
   line-height: 1.47;
@@ -72,13 +73,13 @@
   --progress: #f3f3f1;
   --progress-track: rgba(243, 243, 241, 0.16);
   --code-bg: #1e1f22;
-  --code-text: #bcbec4;
-  --code-keyword: #98cec4;
-  --code-string: #7dba86;
-  --code-comment: #7a7e85;
-  --code-number: #e0b696;
-  --code-type: #e0b696;
-  --code-function: #98cec4;
+  --code-text: #d4d4d4;
+  --code-keyword: #6c95e0;
+  --code-string: #c69f72;
+  --code-comment: #85c46c;
+  --code-number: #ed94bb;
+  --code-type: #c191f4;
+  --code-function: #00c594;
   --inline-bg: rgba(188, 190, 196, 0.12);
   --inline-fg: #d2cdc8;
   --n-gray: #a3a3a1;
