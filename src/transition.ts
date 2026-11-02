@@ -5,9 +5,13 @@ export type NavDir = "forward" | "back" | "fade";
 export function runTransition(dir: NavDir, update: () => void) {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const start = document.startViewTransition?.bind(document);
-  if (reduce || !start) {
+  const resetScroll = dir !== "fade";
+  const finish = () => {
     update();
-    window.scrollTo(0, 0);
+    if (resetScroll) window.scrollTo(0, 0);
+  };
+  if (reduce || !start) {
+    finish();
     return;
   }
 
@@ -16,14 +20,13 @@ export function runTransition(dir: NavDir, update: () => void) {
   try {
     const transition = start(() => {
       flushSync(update);
-      window.scrollTo(0, 0);
+      if (resetScroll) window.scrollTo(0, 0);
     });
     transition.finished.finally(() => {
       delete root.dataset.nav;
     });
   } catch {
     delete root.dataset.nav;
-    update();
-    window.scrollTo(0, 0);
+    finish();
   }
 }

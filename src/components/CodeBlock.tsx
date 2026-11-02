@@ -1,4 +1,4 @@
-import { tokenizeLine } from "../highlight.ts";
+import { tokenizeLine, type Token } from "../highlight.ts";
 
 type CodeBlockProps = {
   lang: string;
@@ -13,7 +13,7 @@ export function CodeBlock({ lang, code }: CodeBlockProps) {
       <code>
         {lines.map((line, lineIndex) => (
           <span className="code-line" key={`${lineIndex}-${line}`}>
-            {tokenizeLine(line, lang).map((token, tokenIndex) =>
+            {groupTokens(tokenizeLine(line, lang)).map((token, tokenIndex) =>
               token.kind === "text" ? (
                 <span key={tokenIndex}>{token.text}</span>
               ) : (
@@ -28,4 +28,14 @@ export function CodeBlock({ lang, code }: CodeBlockProps) {
       </code>
     </pre>
   );
+}
+
+function groupTokens(tokens: Token[]): Token[] {
+  const groups: Token[] = [];
+  for (const token of tokens) {
+    const last = groups.at(-1);
+    if (last && last.kind === token.kind) last.text += token.text;
+    else groups.push({ kind: token.kind, text: token.text });
+  }
+  return groups;
 }

@@ -9,9 +9,10 @@ export function Prose({ pieces }: { pieces: Piece[] }) {
         if (piece.kind === "code") {
           return <CodeBlock key={index} lang={piece.lang} code={piece.code} />;
         }
+        const body = <RichText text={piece.text} spans={piece.spans} />;
         return (
           <p key={index} className={piece.kind === "bullet" ? "prose-bullet" : undefined}>
-            <RichText text={piece.text} spans={piece.spans} />
+            {piece.kind === "bullet" ? <span>{body}</span> : body}
           </p>
         );
       })}

@@ -41,7 +41,7 @@ async function save(server: ViteDevServer, req: IncomingMessage, res: ServerResp
     writeFileSync(path.join(directory, `${entry.stamp}.md`), payload.content);
     res.setHeader("content-type", "application/json");
     res.end(JSON.stringify({ ok: true, local: true, id: entry.stamp }));
-    server.ws.send({ type: "full-reload" });
+    setTimeout(() => server.ws.send({ type: "full-reload" }), 450);
   } catch (error) {
     res.statusCode = 400;
     res.setHeader("content-type", "application/json");

@@ -11,7 +11,7 @@
   --bar: rgba(247, 247, 246, 0.86);
   --progress: #1a1a1a;
   --progress-track: rgba(26, 26, 26, 0.12);
-  --code-bg: #f4f6f8;
+  --code-bg: #e4e7ee;
   --code-text: #1f2328;
   --code-keyword: #2f5fd0;
   --code-string: #946a24;
@@ -282,6 +282,49 @@ h1 {
   font-size: 22px;
 }
 
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 18px;
+  padding-top: 28px;
+  border-top: 1px solid var(--separator);
+}
+
+.preview h2 {
+  margin: 0;
+}
+
+.preview-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.preview-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 10px;
+  width: 100%;
+}
+
+.preview-actions label {
+  width: min(240px, 100%);
+}
+
+.preview-foot .composer-message {
+  text-align: right;
+}
+
+.preview .home-go {
+  align-self: auto;
+  margin-top: 0;
+}
+
 .composer label {
   display: flex;
   flex-direction: column;
@@ -306,6 +349,9 @@ h1 {
   font-size: 13px;
   line-height: 1.6;
   resize: vertical;
+  font-variant-ligatures: common-ligatures contextual;
+  font-feature-settings: "liga" 1, "calt" 1;
+  letter-spacing: normal;
 }
 
 .composer-hint,
@@ -434,9 +480,11 @@ h1 {
 
 .rt-code {
   font-family: var(--mono);
+  font-variant-ligatures: common-ligatures contextual;
+  font-feature-settings: "liga" 1, "calt" 1;
   font-size: 0.88em;
   font-weight: 520;
-  letter-spacing: 0;
+  letter-spacing: normal;
   line-height: 1.45;
   padding: 0.12em 0.4em;
   border-radius: 5px;
@@ -519,9 +567,11 @@ h1 {
 
 .code-block code {
   font-family: var(--mono);
+  font-variant-ligatures: common-ligatures contextual;
+  font-feature-settings: "liga" 1, "calt" 1;
   font-size: 13px;
   line-height: 1.7;
-  letter-spacing: 0;
+  letter-spacing: normal;
   white-space: pre;
   tab-size: 4;
   color: var(--code-text);

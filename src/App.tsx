@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ProgressBar } from "./components/ProgressBar.tsx";
 import { TopBar } from "./components/TopBar.tsx";
 import { runTransition, type NavDir } from "./transition.ts";
@@ -36,6 +36,7 @@ const initialHistory = readHistory();
 export default function App() {
   const [view, setView] = useState<View>(initialHistory.view);
   const [entryId, setEntryId] = useState<string | null>(initialHistory.id);
+  const writeOpened = useRef(false);
 
   useEffect(() => {
     history.scrollRestoration = "manual";
@@ -113,12 +114,6 @@ export default function App() {
     history.pushState(next, "");
   }
 
-  function openEdit(id: string) {
-    const next = { algorhythm: true, view: "write", id } as const;
-    show("forward", next);
-    history.pushState(next, "");
-  }
-
   function back() {
     if (isHistoryState(history.state) && history.state.view !== "home") {
       history.back();
@@ -131,6 +126,27 @@ export default function App() {
     show("back", next);
   }
 
+  function openEdit(id: string) {
+    const next = { algorhythm: true, view: "write", id } as const;
+    const onLog = isHistoryState(history.state) && history.state.view === "log";
+    show("forward", next);
+    if (!onLog) history.pushState({ algorhythm: true, view: "log", id: null }, "");
+    history.pushState(next, "");
+    writeOpened.current = true;
+  }
+
+  function returnToLog() {
+    const next = { algorhythm: true, view: "log", id: null } as const;
+    if (writeOpened.current && isHistoryState(history.state) && history.state.view === "write") {
+      writeOpened.current = false;
+      history.back();
+      return;
+    }
+    writeOpened.current = false;
+    show("back", next);
+    history.replaceState(next, "");
+  }
+
   const watch = `${view}:${entryId ?? ""}`;
 
   return (
@@ -141,7 +157,7 @@ export default function App() {
         <HomeScreen onOpenLog={openLog} />
       ) : null}
       {view === "log" ? <LogScreen onOpen={(id) => openDay(id, "forward")} onWrite={() => openEdit("")} /> : null}
-      {view === "write" ? <WriteScreen key={entryId ?? "new"} editId={entryId} onDone={back} /> : null}
+      {view === "write" ? <WriteScreen key={entryId ?? "new"} editId={entryId} onDone={returnToLog} /> : null}
       {view === "day" && entryId ? (
         <DayScreen key={entryId} id={entryId} onOpen={(id, dir) => openDay(id, dir)} onEdit={openEdit} />
       ) : null}
