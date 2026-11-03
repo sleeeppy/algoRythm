@@ -760,6 +760,16 @@ h1 {
   margin: 8px 0 4px;
 }
 
+.prose > * + .code-frame,
+.prose > * + blockquote,
+.prose > * + ul,
+.prose > * + ol,
+.prose > * + hr,
+.prose > * + pre,
+.prose > * + table {
+  margin-top: 36px;
+}
+
 .code-copy {
   position: absolute;
   top: 8px;

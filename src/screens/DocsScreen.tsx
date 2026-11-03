@@ -31,6 +31,10 @@ export function DocsScreen() {
           <code>{"{link:https://주소}보이는 이름{/}"}</code>
           <span>이름에 괄호가 있을 때</span>
         </li>
+        <li>
+          <code>{"글<br>다음"}</code>
+          <span>그 자리에서 줄바꿈. 줄 끝의 \ 도 같음</span>
+        </li>
       </ul>
       <PostBody source={sample} />
     </main>

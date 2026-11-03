@@ -117,6 +117,12 @@ function walk(source: string) {
       continue;
     }
     if (source[index] === "<") {
+      const br = source.slice(index).match(/^<br\s*\/?>/i);
+      if (br) {
+        out += "<br />";
+        index += br[0].length;
+        continue;
+      }
       out += "&lt;";
       index += 1;
       continue;
