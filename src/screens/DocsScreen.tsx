@@ -3,7 +3,7 @@ import { PostBody } from "../components/PostBody.tsx";
 
 const sample = `{blue}파란 글{/}과 {bg:gray}배경{/}.
 
-{bold blue}같이{/} 쓸 수 있고, {link:https://example.com}[BOJ 0000] 문제{/}처럼 이름에 괄호가 있어도 됩니다.`;
+{bold:blue}같이{/} 쓸 수 있고, {link:https://example.com}[BOJ 0000] 문제{/}처럼 이름에 괄호가 있어도 됩니다.`;
 
 export function DocsScreen() {
   useEffect(() => {
@@ -24,8 +24,8 @@ export function DocsScreen() {
           <span>배경. 색 이름 또는 default</span>
         </li>
         <li>
-          <code>{"{bold blue}글{/}"}</code>
-          <span>bold, italic, strike, code 를 색이랑 같이</span>
+          <code>{"{bold:blue}글{/}"}</code>
+          <span>굵게와 글자색. italic, strike, code 도 같음. {"{bold}"}만 쓰면 굵게만</span>
         </li>
         <li>
           <code>{"{link:https://주소}보이는 이름{/}"}</code>

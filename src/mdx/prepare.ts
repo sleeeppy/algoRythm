@@ -13,11 +13,22 @@ const BACKGROUNDS = new Set([
   "default",
 ]);
 
+const STYLES = new Set(["bold", "italic", "strike", "code"]);
+
+function styleColor(part: string) {
+  const colon = part.indexOf(":");
+  if (colon === -1) return "";
+  const name = part.slice(0, colon);
+  const color = part.slice(colon + 1);
+  if (!STYLES.has(name) || !COLORS.has(color)) return "";
+  return color;
+}
+
 function isSpec(spec: string) {
   const parts = spec.trim().split(/\s+/).filter(Boolean);
   if (parts.length === 0 || spec.includes("\n")) return false;
   return parts.every((part) => {
-    if (part === "bold" || part === "italic" || part === "strike" || part === "code") return true;
+    if (STYLES.has(part) || styleColor(part)) return true;
     if (part.startsWith("link:")) return part.length > "link:".length;
     if (part.startsWith("bg:")) return BACKGROUNDS.has(part.slice(3));
     return COLORS.has(part);
@@ -29,8 +40,12 @@ function attributes(spec: string) {
   let color = "";
   let bg = "";
   for (const part of spec.trim().split(/\s+/).filter(Boolean)) {
-    if (part === "bold" || part === "italic" || part === "strike" || part === "code") {
+    const colored = styleColor(part);
+    if (STYLES.has(part)) {
       attrs.push(part);
+    } else if (colored) {
+      attrs.push(part.slice(0, part.indexOf(":")));
+      color = colored;
     } else if (part.startsWith("link:")) {
       attrs.push(`href=${JSON.stringify(part.slice(5))}`);
     } else if (part.startsWith("bg:")) {

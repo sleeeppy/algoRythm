@@ -137,8 +137,8 @@ export default function App() {
     const next = { algorhythm: true, view: "write", id } as const;
     const onLog = isHistoryState(history.state) && history.state.view === "log";
     show("forward", next);
-    if (!onLog) history.pushState({ algorhythm: true, view: "log", id: null }, "");
-    history.pushState(next, "");
+    if (onLog) history.pushState(next, "");
+    else history.replaceState(next, "");
     writeOpened.current = true;
   }
 
