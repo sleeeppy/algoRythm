@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { rawPost } from "../data.ts";
-import { Prose } from "../components/Prose.tsx";
+import { PostBody } from "../components/PostBody.tsx";
 import { composePost, parsePost, readPost } from "../markdown.ts";
 import type { EntryLink } from "../types.ts";
 
@@ -17,7 +17,9 @@ Console.WriteLine("hello");
 
 type WriteScreenProps = {
   editId?: string | null;
+  hidden?: boolean;
   onDone: () => void;
+  onOpenDocs: () => void;
 };
 
 function draftFrom(editId?: string | null) {
@@ -48,8 +50,13 @@ function draftFrom(editId?: string | null) {
   };
 }
 
-export function WriteScreen({ editId, onDone }: WriteScreenProps) {
+export function WriteScreen({ editId, hidden, onDone, onOpenDocs }: WriteScreenProps) {
   const [draft] = useState(() => draftFrom(editId));
+
+  useEffect(() => {
+    if (hidden) return;
+    document.title = `${editId ? "글 수정" : "글 쓰기"} · AlgoRythm`;
+  }, [editId, hidden]);
   const [stamp, setStamp] = useState(draft.stamp);
   const [problem, setProblem] = useState(draft.problem);
   const [lang, setLang] = useState(draft.lang);
@@ -66,12 +73,10 @@ export function WriteScreen({ editId, onDone }: WriteScreenProps) {
       ? [{ href: href.trim(), label: label.trim() || href.trim() }]
       : [];
     try {
-      return {
-        entry: parsePost(composePost({ stamp: stamp || "20260101", problem: problem || "제목", lang: lang || "Text", description, links, body })),
-        error: "",
-      };
+      parsePost(composePost({ stamp: stamp || "20260101", problem: problem || "제목", lang: lang || "Text", description, links, body }));
+      return { error: "" };
     } catch (error) {
-      return { entry: null, error: error instanceof Error ? error.message : "미리보기를 만들지 못했습니다." };
+      return { error: error instanceof Error ? error.message : "미리보기를 만들지 못했습니다." };
     }
   }, [stamp, problem, lang, description, href, label, body]);
 
@@ -101,8 +106,13 @@ export function WriteScreen({ editId, onDone }: WriteScreenProps) {
   }
 
   return (
-    <main className="column composer">
-      <h1>{editId ? "글 수정" : "글 쓰기"}</h1>
+    <main className="column composer" hidden={hidden}>
+      <div className="composer-head">
+        <h1>{editId ? "글 수정" : "글 쓰기"}</h1>
+        <button type="button" className="docs-link press" onClick={onOpenDocs}>
+          문법
+        </button>
+      </div>
       <p className="intro">마크다운으로 적으면 posts 폴더의 md 파일이 됩니다.</p>
       <div className="composer-meta">
         <label>
@@ -134,16 +144,13 @@ export function WriteScreen({ editId, onDone }: WriteScreenProps) {
         <section className="preview">
           <h2>미리보기</h2>
           {preview.error ? <p className="composer-message">{preview.error}</p> : null}
-          {preview.entry ? <Prose pieces={preview.entry.pieces} /> : null}
+          <PostBody source={body} />
         </section>
         <div className="composer-form">
           <label className="composer-body">
             본문
             <textarea value={body} onChange={(event) => setBody(event.target.value)} spellCheck={false} />
           </label>
-          <p className="composer-hint">
-            Enter로 줄바꿈 · 빈 줄은 문단 · **굵게** · `코드` · {"{blue}글{/}"} · {"{bg:gray}배경{/}"} · [이름](주소)
-          </p>
           <div className="preview-foot">
             {message ? <p className="composer-message">{message}</p> : null}
             <div className="preview-actions">

@@ -3,11 +3,12 @@ import { ProgressBar } from "./components/ProgressBar.tsx";
 import { TopBar } from "./components/TopBar.tsx";
 import { runTransition, type NavDir } from "./transition.ts";
 import { DayScreen } from "./screens/DayScreen.tsx";
+import { DocsScreen } from "./screens/DocsScreen.tsx";
 import { HomeScreen } from "./screens/HomeScreen.tsx";
 import { LogScreen } from "./screens/LogScreen.tsx";
 import { WriteScreen } from "./screens/WriteScreen.tsx";
 
-type View = "home" | "log" | "day" | "write";
+type View = "home" | "log" | "day" | "write" | "docs";
 
 type HistoryState = {
   algorhythm: true;
@@ -20,7 +21,7 @@ function isHistoryState(value: unknown): value is HistoryState {
   const state = value as HistoryState;
   return (
     state.algorhythm === true &&
-    (state.view === "home" || state.view === "log" || state.view === "day" || state.view === "write")
+    (state.view === "home" || state.view === "log" || state.view === "day" || state.view === "write" || state.view === "docs")
   );
 }
 
@@ -126,6 +127,12 @@ export default function App() {
     show("back", next);
   }
 
+  function openDocs() {
+    const next = { algorhythm: true, view: "docs", id: entryId } as const;
+    show("forward", next);
+    history.pushState(next, "");
+  }
+
   function openEdit(id: string) {
     const next = { algorhythm: true, view: "write", id } as const;
     const onLog = isHistoryState(history.state) && history.state.view === "log";
@@ -152,12 +159,18 @@ export default function App() {
   return (
     <>
       <ProgressBar watch={watch} />
-      <TopBar backLabel={view === "log" ? "메인" : "기록"} onBack={view === "home" ? undefined : back} />
+      <TopBar
+        backLabel={view === "log" ? "메인" : view === "docs" ? (entryId ? "글 수정" : "글 쓰기") : "기록"}
+        onBack={view === "home" ? undefined : back}
+      />
       {view === "home" ? (
         <HomeScreen onOpenLog={openLog} />
       ) : null}
       {view === "log" ? <LogScreen onOpen={(id) => openDay(id, "forward")} onWrite={() => openEdit("")} /> : null}
-      {view === "write" ? <WriteScreen key={entryId ?? "new"} editId={entryId} onDone={returnToLog} /> : null}
+      {view === "write" || view === "docs" ? (
+        <WriteScreen key={entryId ?? "new"} editId={entryId} hidden={view !== "write"} onDone={returnToLog} onOpenDocs={openDocs} />
+      ) : null}
+      {view === "docs" ? <DocsScreen /> : null}
       {view === "day" && entryId ? (
         <DayScreen key={entryId} id={entryId} onOpen={(id, dir) => openDay(id, dir)} onEdit={openEdit} />
       ) : null}

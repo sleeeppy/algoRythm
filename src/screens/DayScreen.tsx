@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { entries, findEntry } from "../data.ts";
 import { LanguageTag } from "../components/LanguageTag.tsx";
-import { Prose } from "../components/Prose.tsx";
+import { PostBody } from "../components/PostBody.tsx";
 
 type DayScreenProps = {
   id: string;
@@ -46,7 +46,7 @@ export function DayScreen({ id, onOpen, onEdit }: DayScreenProps) {
           ))}
         </div>
       </div>
-      <Prose pieces={entry.pieces} />
+      <PostBody source={entry.body} />
       <div className="edit-row">
         <button type="button" className="edit-link press" onClick={() => onEdit(entry.id)}>
           <PenIcon />

@@ -30,11 +30,6 @@ export type RichSpan = {
   href?: string;
 };
 
-export type Piece =
-  | { kind: "text"; text: string; spans?: RichSpan[] }
-  | { kind: "bullet"; text: string; spans?: RichSpan[] }
-  | { kind: "code"; lang: string; code: string };
-
 export type EntryLink = {
   href: string;
   label: string;
@@ -47,5 +42,5 @@ export type Entry = {
   lang: string;
   description: string;
   links: EntryLink[];
-  pieces: Piece[];
+  body: string;
 };

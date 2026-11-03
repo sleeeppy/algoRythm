@@ -1,5 +1,5 @@
 import { parsePost } from "./markdown.ts";
-export type { Entry, EntryLink, Piece, RichColor, RichSpan } from "./types.ts";
+export type { Entry, EntryLink, RichColor, RichSpan } from "./types.ts";
 import type { Entry } from "./types.ts";
 
 const files = import.meta.glob("../posts/*.md", {
@@ -28,8 +28,15 @@ export function findEntry(id: string): Entry {
 
 export function excerpt(entry: Entry): string {
   if (entry.description.trim()) return entry.description.trim();
-  const text = entry.pieces.find((piece) => piece.kind === "text" || piece.kind === "bullet");
-  if (!text || (text.kind !== "text" && text.kind !== "bullet")) return "";
-  const line = text.text.split("\n").find((row) => row.trim());
-  return line?.trim() || "";
+  const plain = entry.body
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`[^`]*`/g, " ")
+    .replace(/\{[^{}\n]*\}|\{\/\}/g, "")
+    .replace(/!\[[^\]]*]\([^)]*\)/g, " ")
+    .replace(/\[([^\]]+)]\([^)]*\)/g, "$1");
+  const line = plain
+    .split("\n")
+    .map((row) => row.replace(/^[#>*\-\d.\s]+/, "").trim())
+    .find(Boolean);
+  return line ?? "";
 }
