@@ -22,30 +22,33 @@ export function DayScreen({ id, onOpen, onEdit }: DayScreenProps) {
 
   return (
     <main className="column" data-article="">
-      <p className="meta">
-        <time dateTime={entry.stamp}>{entry.stamp}</time>
-        <LanguageTag lang={entry.lang} />
-      </p>
-      <div className="title-row">
-        <h1>{entry.problem}</h1>
-        <div className="title-actions">
-          {entry.links.map((link) => (
-            <a
-              key={link.href}
-              className="link-button press"
-              href={link.href}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <svg viewBox="0 0 16 16" aria-hidden="true">
-                <rect x="2.25" y="1.75" width="11.5" height="12.5" rx="2" />
-                <path d="M5 6h6M5 8.5h6M5 11h4" />
-              </svg>
-              <span>{link.label}</span>
-            </a>
-          ))}
+      <header className="article-head">
+        <p className="meta">
+          <time dateTime={entry.stamp}>{entry.stamp}</time>
+          <LanguageTag lang={entry.lang} />
+        </p>
+        <div className="title-row">
+          <h1>{entry.problem}</h1>
+          <div className="title-actions">
+            {entry.links.map((link) => (
+              <a
+                key={link.href}
+                className="link-button press"
+                href={link.href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                  <rect x="2.25" y="1.75" width="11.5" height="12.5" rx="2" />
+                  <path d="M5 6h6M5 8.5h6M5 11h4" />
+                </svg>
+                <span>{link.label}</span>
+              </a>
+            ))}
+          </div>
         </div>
-      </div>
+        {entry.description.trim() ? <p className="lede">{entry.description.trim()}</p> : null}
+      </header>
       <PostBody source={entry.body} />
       <div className="edit-row">
         <button type="button" className="edit-link press" onClick={() => onEdit(entry.id)}>

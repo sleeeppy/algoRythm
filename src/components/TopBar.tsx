@@ -10,16 +10,18 @@ export function TopBar({ backLabel, onBack }: TopBarProps) {
 
   return (
     <header className="bar">
-      {onBack ? (
-        <button type="button" className="back press" onClick={onBack}>
-          {backLabel}
+      <div className="bar-row">
+        {onBack ? (
+          <button type="button" className="back press" onClick={onBack}>
+            {backLabel}
+          </button>
+        ) : (
+          <span className="brand">AlgoRythm</span>
+        )}
+        <button type="button" className="theme-toggle press" onClick={toggle}>
+          {theme === "dark" ? "라이트" : "다크"}
         </button>
-      ) : (
-        <span className="brand">AlgoRythm</span>
-      )}
-      <button type="button" className="theme-toggle press" onClick={toggle}>
-        {theme === "dark" ? "라이트" : "다크"}
-      </button>
+      </div>
     </header>
   );
 }
