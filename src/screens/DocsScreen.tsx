@@ -35,6 +35,10 @@ export function DocsScreen() {
           <code>{"글<br>다음"}</code>
           <span>그 자리에서 줄바꿈. 줄 끝의 \ 도 같음</span>
         </li>
+        <li>
+          <code>{"![설명](주소)"}</code>
+          <span>사진. 본문에 끌어다 놓으면 그 자리에 들어감</span>
+        </li>
       </ul>
       <PostBody source={sample} />
     </main>

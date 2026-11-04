@@ -45,8 +45,8 @@
   --mark-c: #4e6358;
   --mention: rgba(28, 27, 24, 0.08);
   --mention-hover: rgba(28, 27, 24, 0.14);
-  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
-    "Apple SD Gothic Neo", system-ui, sans-serif;
+  --sans: "Pretendard Variable", -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "SF Pro Display", "Apple SD Gothic Neo", system-ui, sans-serif;
   --mono: "JetBrains Mono Variable", "JetBrains Mono", "SF Mono", ui-monospace, Menlo,
     "Apple SD Gothic Neo", monospace;
   font-family: var(--sans);
@@ -55,7 +55,7 @@
   letter-spacing: -0.012em;
   color: var(--label);
   background: var(--bg);
-  font-synthesis: none;
+  font-synthesis: style;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
@@ -441,6 +441,10 @@ h1 {
   min-height: 0;
 }
 
+.composer-body.is-dropping textarea {
+  background: var(--press);
+}
+
 .composer-hint,
 .composer-message {
   color: var(--secondary);
@@ -541,6 +545,17 @@ h1 {
 
 .prose p {
   line-height: 1.62;
+}
+
+.prose img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 14px;
+}
+
+.prose p:has(> img:only-child) {
+  line-height: 0;
 }
 
 .prose h1,

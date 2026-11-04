@@ -13,6 +13,10 @@ function readBody(req: IncomingMessage) {
   });
 }
 
+function mediaNameOk(name?: string): name is string {
+  return Boolean(name && /^\d{8}-[a-f0-9]{8}\.(jpg|png|gif|webp)$/.test(name));
+}
+
 function publishPosts(): Plugin {
   return {
     name: "publish-posts",
@@ -24,8 +28,33 @@ function publishPosts(): Plugin {
         }
         void save(server, req, res);
       });
+      server.middlewares.use("/api/media", (req, res, next) => {
+        if (req.method !== "POST") {
+          next();
+          return;
+        }
+        void saveMedia(server, req, res);
+      });
     },
   };
+}
+
+async function saveMedia(server: ViteDevServer, req: IncomingMessage, res: ServerResponse) {
+  try {
+    const payload = JSON.parse(await readBody(req)) as { name?: string; data?: string };
+    if (!mediaNameOk(payload.name) || !payload.data) throw new Error("사진을 올리지 못했습니다.");
+    const bytes = Buffer.from(payload.data, "base64");
+    if (bytes.length === 0 || bytes.length > 8_000_000) throw new Error("사진이 너무 큽니다.");
+    const directory = path.join(server.config.root, "public", "media");
+    mkdirSync(directory, { recursive: true });
+    writeFileSync(path.join(directory, payload.name), bytes);
+    res.setHeader("content-type", "application/json");
+    res.end(JSON.stringify({ ok: true, src: `/media/${payload.name}` }));
+  } catch (error) {
+    res.statusCode = 400;
+    res.setHeader("content-type", "application/json");
+    res.end(JSON.stringify({ ok: false, error: error instanceof Error ? error.message : "사진을 올리지 못했습니다." }));
+  }
 }
 
 async function save(server: ViteDevServer, req: IncomingMessage, res: ServerResponse) {
