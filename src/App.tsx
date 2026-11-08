@@ -159,10 +159,12 @@ export default function App() {
   return (
     <>
       <ProgressBar watch={watch} />
-      <TopBar
-        backLabel={view === "log" ? "메인" : view === "docs" ? (entryId ? "글 수정" : "글 쓰기") : "기록"}
-        onBack={view === "home" ? undefined : back}
-      />
+      {view === "home" ? null : (
+        <TopBar
+          backLabel={view === "log" ? "메인" : view === "docs" ? (entryId ? "글 수정" : "글 쓰기") : "기록"}
+          onBack={back}
+        />
+      )}
       {view === "home" ? (
         <HomeScreen onOpenLog={openLog} />
       ) : null}
